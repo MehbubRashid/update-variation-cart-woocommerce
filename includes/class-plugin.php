@@ -119,17 +119,31 @@ class Uvcw_Plugin {
 	public function define_hook_or_initialize() {
 
 		//Admin enqueue script
-		add_action( 'admin_enqueue_scripts', array( $this, 'admin_scripts' ) );
+		add_action( 'wp_enqueue_scripts', array( $this, 'public_scripts' ) );
+
+		add_filter( 'woocommerce_get_item_data', array($this, 'variation_data_html'), 10, 2 );
+	}
+
+
+	public function variation_data_html($item_data, $cart_item) {
+		// echo json_encode($item_data);
+		return $item_data;
 	}
 
 	/**
-	 * Enqueue admin assets.
+	 * Enqueue public assets.
 	 *
 	 * @return void
 	 */
-	public function admin_scripts() {
-		wp_enqueue_script( 'update-variation-cart-woocommerce-admin', UVCW_ASSETS_URL . 'dist/js/admin.min.js', array( 'jquery' ), UVCW_ASSETS_VERSION, true );
-		wp_enqueue_style( 'update-variation-cart-woocommerce-admin', UVCW_ASSETS_URL . 'dist/css/admin.min.css', array(), UVCW_ASSETS_VERSION );
+	public function public_scripts() {
+		if ( function_exists('is_cart') && is_cart() ) {
+			wp_enqueue_script( 'sweetalert2', UVCW_ASSETS_URL . 'js/sweetalert2.min.js', array('jquery'), UVCW_ASSETS_VERSION, true );
+			wp_enqueue_script( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/js/public.min.js', array( 'jquery' ), UVCW_ASSETS_VERSION, true );
+			wp_localize_script( 'update-variation-cart-woocommerce-public', 'uvcw', array(
+				'edit' => esc_html__('Edit', 'update-variation-cart-woocommerce')
+			) );
+			wp_enqueue_style( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/css/public.min.css', array(), UVCW_ASSETS_VERSION );
+		}
 	}
 
 }

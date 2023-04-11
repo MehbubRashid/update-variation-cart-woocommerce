@@ -57,7 +57,7 @@ function watchTask() {
 // Opens up the browser
 function browser(cb) {
     browserSync.init({
-        proxy: "http://localhost/etoiles/wp-admin/"
+        proxy: "http://localhost/etoiles/cart/"
     });
     cb();
 }

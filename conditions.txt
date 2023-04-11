@@ -1,0 +1,2 @@
+.woocommerce-cart-form__cart-item .variation should exist for showing edit icon
+.woocommerce-cart-form__cart-item .product-name a should exist for getting cart product url
