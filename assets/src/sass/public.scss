@@ -50,6 +50,15 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 .uvcw-product-container {
     display: flex;
     gap: 40px;
+
+    .attribute {
+        clear: both;
+        margin-top: 40px;
+    }
+
+    .single_variation_wrap {
+        clear: both;
+    }
 }
 
 .uvcw-prod-images {
@@ -59,14 +68,19 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
     gap: 5px;
 }
 
+.uvcw-update-btn {
+    margin-top: 40px;
+}
+
 .uvcw-prod-details {
     flex: 1;
     text-align: left;
+    overflow: hidden;
+    padding-left: 5px;
 }
 
 .uvcw-prod-title {
     line-height: 17px;
-    margin-top: -15px;
 
     a {
         font-size: 20px;

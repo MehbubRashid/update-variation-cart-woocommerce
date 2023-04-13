@@ -22,8 +22,10 @@
             showClass: {
                 popup: 'uvcw-swal'
             },
-            didOpen: function(){
-                
+            didOpen: function(elem){
+                $(elem).find('.variations_form').wc_variation_form();
+
+                $(elem).find('.woocommerce-variation-add-to-cart').html('<button class="uvcw-update-btn">'+uvcw.update+'</button>')
             },
             showConfirmButton: false,
             showCloseButton: true,
