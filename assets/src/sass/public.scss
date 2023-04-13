@@ -1,5 +1,4 @@
 .uvcw-edit {
-    margin-top: 10px;
     cursor: pointer;
 
     i {
@@ -8,11 +7,23 @@
 }
 
 .uvcw-swal {
-    width: 800px !important;
+    width: 1000px !important;
+    padding-bottom: 0 !important;
 
     .swal2-close:focus {
         box-shadow: none;
     }
+
+    .swal2-html-container {
+        max-height: 60vh;
+        overflow-y: auto;
+        margin: 50px 0 20px 20px;
+        margin-right: 0;
+    }
+}
+
+body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
+    overflow-y: visible !important;
 }
 
 .uvcw-swal-loader {
@@ -30,4 +41,35 @@
     border-top: 2px solid black;
     border-radius: 500%;
     animation: spin .3s linear infinite;
+}
+
+.uvcw-popup-source {
+    display: none;
+}
+
+.uvcw-product-container {
+    display: flex;
+    gap: 40px;
+}
+
+.uvcw-prod-images {
+    width: 350px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 5px;
+}
+
+.uvcw-prod-details {
+    flex: 1;
+    text-align: left;
+}
+
+.uvcw-prod-title {
+    line-height: 17px;
+    margin-top: -15px;
+
+    a {
+        font-size: 20px;
+        font-weight: 500;
+    }
 }
