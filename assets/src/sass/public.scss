@@ -59,6 +59,10 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
     .single_variation_wrap {
         clear: both;
     }
+
+    .quantity {
+        display: none !important;
+    }
 }
 
 .uvcw-prod-images {
@@ -73,10 +77,7 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 }
 
 .uvcw-prod-details {
-    flex: 1;
     text-align: left;
-    overflow: hidden;
-    padding-left: 5px;
 }
 
 .uvcw-prod-title {

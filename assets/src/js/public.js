@@ -25,7 +25,7 @@
             didOpen: function(elem){
                 $(elem).find('.variations_form').wc_variation_form();
 
-                $(elem).find('.woocommerce-variation-add-to-cart').html('<button class="uvcw-update-btn">'+uvcw.update+'</button>')
+                $(elem).find('.woocommerce-variation-add-to-cart .single_add_to_cart_button').text(uvcw.update);
             },
             showConfirmButton: false,
             showCloseButton: true,

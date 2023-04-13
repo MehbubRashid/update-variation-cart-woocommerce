@@ -186,8 +186,16 @@ class Uvcw_Plugin {
 							<?php echo esc_html($product->get_name()); ?>
 						</a>
 					</h1>
-					<?php wc_get_template( 'single-product/price.php' ); ?>
-					<?php do_action( 'woocommerce_' . $product->get_type() . '_add_to_cart' ); ?>
+					<?php 
+
+					if ( isset( $cart_item['variation'] ) ) {
+						foreach ($cart_item['variation'] as $key => $value) {
+							$_REQUEST[$key] = $value;
+						}
+					}
+					do_action( 'woocommerce_single_product_summary' ); 
+					
+					?>
 				</div>
 			</div>
 			<?php echo htmlspecialchars(ob_get_clean(), ENT_NOQUOTES); ?>
