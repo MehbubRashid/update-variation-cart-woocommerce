@@ -1,5 +1,6 @@
 .uvcw-edit {
     cursor: pointer;
+    display: inline-block;
 
     i {
         margin-right: 5px;
@@ -53,7 +54,6 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 
     .attribute {
         clear: both;
-        margin-top: 40px;
     }
 
     .single_variation_wrap {
@@ -87,4 +87,8 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
         font-size: 20px;
         font-weight: 500;
     }
+}
+
+.woocommerce div.product .uvcw-prod-details form.cart .cart-btns-wrap .button {
+    min-width: 250px;
 }
