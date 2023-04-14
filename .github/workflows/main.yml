@@ -14,7 +14,7 @@ jobs:
         server: etoilesfrissons.com
         username: etoilesf
         password: ${{ secrets.ftp_password }}
-        server-dir: public_html/staging2/wp-content/plugins/product-customizer-for-woocommerce/
+        server-dir: public_html/staging2/wp-content/plugins/update-variation-cart-woocommerce/
         exclude: |
           **/.git*
           **/.git*/**
