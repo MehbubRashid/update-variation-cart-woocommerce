@@ -124,6 +124,49 @@ class Uvcw_Plugin {
 		add_filter( 'woocommerce_get_item_data', array($this, 'variation_data_html'), 10, 2 );
 
 		add_action( 'woocommerce_after_template_part', array($this, 'after_wc_template'), 10, 4 );
+
+		add_action( 'wp_ajax_uvcw_update_cart', array($this, 'ajax_update_cart') );
+		add_action( 'wp_ajax_nopriv_uvcw_update_cart', array($this, 'ajax_update_cart') );
+	}
+
+	public function ajax_update_cart() {
+		$cart = WC()->cart;
+
+		if ( isset( $_POST['data']['item_key'] ) ) {
+			$item_key = sanitize_text_field( $_POST['data']['item_key'] );
+			$cart_item = $cart->get_cart_item( $item_key );
+
+			$cart->remove_cart_item($item_key);
+
+			wp_send_json( array('success' => true) );
+
+			// if ( $cart_item ) {
+			// 	// Retrieve the variation ID and attributes of the cart item
+
+			// 	if ( isset( $_POST['data']['variation_id'] ) ) {
+
+			// 		$cart_item['variation_id'] = sanitize_text_field($_POST['data']['variation_id']);
+			// 	}
+				
+			// 	$variation = $cart_item['variation'];
+
+			// 	foreach ($_POST['data'] as $key => $value) {
+			// 		if ( strpos($key, 'attribute_') !== false ) {
+			// 			$variation[sanitize_text_field($key)] = sanitize_text_field($value);
+			// 		}
+			// 	}
+
+			// 	// Update the variation data in the cart item
+			// 	$cart_item['variation'] = $variation;
+			  
+			// 	// Update the cart item in the cart
+			// 	$cart->cart_contents[ $item_key ] = $cart_item;
+
+			// 	wp_send_json( $cart->cart_contents );
+			// }
+		}
+
+		wp_die();
 	}
 
 	// add edit button
@@ -144,8 +187,8 @@ class Uvcw_Plugin {
 		global $product, $post;
 		$post = get_post($product_id);
 		$product = wc_get_product($product_id);
-		
 		?> 
+		<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
 		<div class="uvcw-popup-source">
 			<?php ob_start(); ?>
 			<div class="uvcw-product-container product">
@@ -193,9 +236,11 @@ class Uvcw_Plugin {
 							$_REQUEST[$key] = $value;
 						}
 					}
-					do_action( 'woocommerce_single_product_summary' ); 
-					
-					?>
+
+					?> 
+					<div class="">
+						<?php do_action( 'woocommerce_single_product_summary' ); ?>
+					</div>
 				</div>
 			</div>
 			<?php echo htmlspecialchars(ob_get_clean(), ENT_NOQUOTES); ?>
@@ -216,7 +261,8 @@ class Uvcw_Plugin {
 			wp_enqueue_script( 'sweetalert2', UVCW_ASSETS_URL . 'js/sweetalert2.min.js', array('jquery'), UVCW_ASSETS_VERSION, true );
 			wp_enqueue_script( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/js/public.min.js', array( 'jquery' ), UVCW_ASSETS_VERSION, true );
 			wp_localize_script( 'update-variation-cart-woocommerce-public', 'uvcw', array(
-				'update' => esc_html__('Update', 'update-variation-cart-woocommerce')
+				'update' => esc_html__('Update', 'update-variation-cart-woocommerce'),
+				'ajaxurl' => admin_url('admin-ajax.php')
 			) );
 			wp_enqueue_style( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/css/public.min.css', array(), UVCW_ASSETS_VERSION );
 		}
