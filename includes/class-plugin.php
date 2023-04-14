@@ -139,31 +139,6 @@ class Uvcw_Plugin {
 			$cart->remove_cart_item($item_key);
 
 			wp_send_json( array('success' => true) );
-
-			// if ( $cart_item ) {
-			// 	// Retrieve the variation ID and attributes of the cart item
-
-			// 	if ( isset( $_POST['data']['variation_id'] ) ) {
-
-			// 		$cart_item['variation_id'] = sanitize_text_field($_POST['data']['variation_id']);
-			// 	}
-				
-			// 	$variation = $cart_item['variation'];
-
-			// 	foreach ($_POST['data'] as $key => $value) {
-			// 		if ( strpos($key, 'attribute_') !== false ) {
-			// 			$variation[sanitize_text_field($key)] = sanitize_text_field($value);
-			// 		}
-			// 	}
-
-			// 	// Update the variation data in the cart item
-			// 	$cart_item['variation'] = $variation;
-			  
-			// 	// Update the cart item in the cart
-			// 	$cart->cart_contents[ $item_key ] = $cart_item;
-
-			// 	wp_send_json( $cart->cart_contents );
-			// }
 		}
 
 		wp_die();
