@@ -230,6 +230,7 @@ class Uvcw_Plugin {
 	 * @return void
 	 */
 	public function public_scripts() {
+		wp_enqueue_style( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/css/public.min.css', array(), UVCW_ASSETS_VERSION );
 		if ( function_exists('is_cart') && is_cart() ) {
 			wp_enqueue_script( 'wc-add-to-cart' );
 			wp_enqueue_script( 'wc-add-to-cart-variation' );
@@ -239,7 +240,6 @@ class Uvcw_Plugin {
 				'update' => esc_html__('Update', 'update-variation-cart-woocommerce'),
 				'ajaxurl' => admin_url('admin-ajax.php')
 			) );
-			wp_enqueue_style( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/css/public.min.css', array(), UVCW_ASSETS_VERSION );
 		}
 	}
 
