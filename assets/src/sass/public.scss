@@ -16,10 +16,9 @@
     }
 
     .swal2-html-container {
-        max-height: 60vh;
+        max-height: 80vh;
         overflow-y: auto;
-        margin: 50px 0 20px 20px;
-        margin-right: 0;
+        margin: 50px;
     }
 }
 
@@ -50,7 +49,6 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 
 .uvcw-product-container {
     display: flex;
-    gap: 40px;
 
     .attribute {
         clear: both;
@@ -67,9 +65,11 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 
 .uvcw-prod-images {
     width: 350px;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 5px;
+    margin: 0 auto;
+}
+
+.uvcw-single-prod-image {
+    display: block;
 }
 
 .uvcw-update-btn {
@@ -78,6 +78,8 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 
 .uvcw-prod-details {
     text-align: left;
+    flex: 1;
+    margin-left: 40px;
 }
 
 .uvcw-prod-title {

@@ -180,19 +180,21 @@ class Uvcw_Plugin {
 				if ( count( $images ) ) {
 					?> 
 					<div class="uvcw-prod-images">
-						<?php 
-						foreach ($images as $attachment_id) {
-							$url = wp_get_attachment_image_src( $attachment_id, 'full' );
-							if ( is_array($url) ) {
-								$url = $url[0];
+						<div class="uvcw-prod-images-wrapper">
+							<?php 
+							foreach ($images as $attachment_id) {
+								$url = wp_get_attachment_image_src( $attachment_id, 'full' );
+								if ( is_array($url) ) {
+									$url = $url[0];
+								}
+								?> 
+								<a class="uvcw-single-prod-image" target="_blank" href="<?php echo esc_url( $url ); ?>">
+									<img src="<?php echo esc_url($url); ?>" alt="">
+								</a>
+								<?php
 							}
-							?> 
-							<a target="_blank" href="<?php echo esc_url( $url ); ?>">
-								<img src="<?php echo esc_url($url); ?>" alt="">
-							</a>
-							<?php
-						}
-						?>
+							?>
+						</div>
 					</div>
 					<?php
 				}

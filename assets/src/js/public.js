@@ -19,6 +19,7 @@
         var key = $(this).closest('.woocommerce-cart-form__cart-item').find('.uvcw-item-key').val();
         Swal.fire({
             html: textToHTML(htmlContent),
+            allowOutsideClick: false,
             showClass: {
                 popup: 'uvcw-swal'
             },
@@ -26,6 +27,8 @@
                 $(elem).find('.variations_form').wc_variation_form();
 
                 $(elem).find('.woocommerce-variation-add-to-cart .single_add_to_cart_button').attr('data-key', key).text(uvcw.update);
+
+                $(document.body).trigger('uvcw_popup_opened');
             },
             showConfirmButton: false,
             showCloseButton: true,
