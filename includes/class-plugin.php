@@ -181,19 +181,21 @@ class Uvcw_Plugin {
 					?> 
 					<div class="uvcw-prod-images">
 						<div class="uvcw-prod-images-wrapper">
-							<?php 
-							foreach ($images as $attachment_id) {
-								$url = wp_get_attachment_image_src( $attachment_id, 'full' );
-								if ( is_array($url) ) {
-									$url = $url[0];
+							<div class="uvcw-slider-wrapper">
+								<?php 
+								foreach ($images as $attachment_id) {
+									$url = wp_get_attachment_image_src( $attachment_id, 'full' );
+									if ( is_array($url) ) {
+										$url = $url[0];
+									}
+									?> 
+									<a class="uvcw-single-prod-image" target="_blank" href="<?php echo esc_url( $url ); ?>">
+										<img src="<?php echo esc_url($url); ?>" alt="">
+									</a>
+									<?php
 								}
-								?> 
-								<a class="uvcw-single-prod-image" target="_blank" href="<?php echo esc_url( $url ); ?>">
-									<img src="<?php echo esc_url($url); ?>" alt="">
-								</a>
-								<?php
-							}
-							?>
+								?>
+							</div>
 						</div>
 					</div>
 					<?php
@@ -238,10 +240,10 @@ class Uvcw_Plugin {
 	 */
 	public function public_scripts() {
 		wp_enqueue_style( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/css/public.min.css', array(), UVCW_ASSETS_VERSION );
+		wp_enqueue_script( 'sweetalert2', UVCW_ASSETS_URL . 'js/sweetalert2.min.js', array('jquery'), UVCW_ASSETS_VERSION, true );
 		if ( function_exists('is_cart') && is_cart() ) {
 			wp_enqueue_script( 'wc-add-to-cart' );
 			wp_enqueue_script( 'wc-add-to-cart-variation' );
-			wp_enqueue_script( 'sweetalert2', UVCW_ASSETS_URL . 'js/sweetalert2.min.js', array('jquery'), UVCW_ASSETS_VERSION, true );
 			wp_enqueue_script( 'update-variation-cart-woocommerce-public', UVCW_ASSETS_URL . 'dist/js/public.min.js', array( 'jquery' ), UVCW_ASSETS_VERSION, true );
 			wp_localize_script( 'update-variation-cart-woocommerce-public', 'uvcw', array(
 				'update' => esc_html__('Update', 'update-variation-cart-woocommerce'),

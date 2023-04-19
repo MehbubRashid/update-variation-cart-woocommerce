@@ -15,6 +15,7 @@
     };
 
     $(document).on('click', '.uvcw-edit', function(){
+        window.uvcw_last_clicked_btn = $(this)[0];
         var htmlContent = $(this).closest('.woocommerce-cart-form__cart-item').find('.uvcw-popup-source').text();
         var key = $(this).closest('.woocommerce-cart-form__cart-item').find('.uvcw-item-key').val();
         Swal.fire({
