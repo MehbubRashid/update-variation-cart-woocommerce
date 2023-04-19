@@ -206,6 +206,11 @@ class Uvcw_Plugin {
 							<?php echo esc_html($product->get_name()); ?>
 						</a>
 					</h1>
+					<div class="uvcw-view-details">
+						<a href="<?php echo esc_url(get_the_permalink( $product_id )); ?>" target="_blank">
+							<?php echo esc_html__('VIEW DETAILS', 'update-variation-cart-woocommerce'); ?>
+						</a>
+					</div>
 					<?php 
 
 					if ( isset( $cart_item['variation'] ) ) {
