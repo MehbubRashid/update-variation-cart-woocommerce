@@ -146,7 +146,7 @@ class Uvcw_Plugin {
 
 	// add edit button
 	public function after_wc_template($template_name, $template_path, $located, $args) {
-		if ( $template_name === 'cart/cart-item-data.php' ) {
+		if ( $template_name === 'cart/cart-item-data.php' && is_cart() ) {
 			?> 
 			<div class="uvcw-edit">
 				<i class="dashicons dashicons-edit"></i>
@@ -158,78 +158,81 @@ class Uvcw_Plugin {
 
 
 	public function variation_data_html($item_data, $cart_item) {
-		$product_id = $cart_item['product_id'];
-		global $product, $post;
-		$post = get_post($product_id);
-		$product = wc_get_product($product_id);
-		?> 
-		<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
-		<div class="uvcw-popup-source">
-			<?php ob_start(); ?>
-			<div class="uvcw-product-container product">
-				<?php 
-				$images = array(get_post_thumbnail_id( $product_id ));
-				$gallery_images = $product->get_gallery_image_ids();
-				if ( !is_array($gallery_images) ) {
-					$gallery_images = array();
-				}
+		if ( !is_admin(  ) && is_cart() ) {
 
-				$images = array_unique(array_merge($images, $gallery_images));
-
-				
-				if ( count( $images ) ) {
-					?> 
-					<div class="uvcw-prod-images">
-						<div class="uvcw-prod-images-wrapper">
-							<div class="uvcw-slider-wrapper">
-								<?php 
-								foreach ($images as $attachment_id) {
-									$url = wp_get_attachment_image_src( $attachment_id, 'full' );
-									if ( is_array($url) ) {
-										$url = $url[0];
-									}
-									?> 
-									<a class="uvcw-single-prod-image" target="_blank" href="<?php echo esc_url( $url ); ?>">
-										<img src="<?php echo esc_url($url); ?>" alt="">
-									</a>
-									<?php
-								}
-								?>
-							</div>
-						</div>
-					</div>
-					<?php
-				}
-				?>
-				
-				<div class="uvcw-prod-details">
-					<h1 class="uvcw-prod-title">
-						<a target="_blank" href="<?php echo esc_url( get_the_permalink( $product_id ) ); ?>">
-							<?php echo esc_html($product->get_name()); ?>
-						</a>
-					</h1>
-					<div class="uvcw-view-details">
-						<a href="<?php echo esc_url(get_the_permalink( $product_id )); ?>" target="_blank">
-							<?php echo esc_html__('VIEW DETAILS', 'update-variation-cart-woocommerce'); ?>
-						</a>
-					</div>
+			$product_id = $cart_item['product_id'];
+			global $product, $post;
+			$post = get_post($product_id);
+			$product = wc_get_product($product_id);
+			?> 
+			<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
+			<div class="uvcw-popup-source">
+				<?php ob_start(); ?>
+				<div class="uvcw-product-container product">
 					<?php 
-
-					if ( isset( $cart_item['variation'] ) ) {
-						foreach ($cart_item['variation'] as $key => $value) {
-							$_REQUEST[$key] = $value;
-						}
+					$images = array(get_post_thumbnail_id( $product_id ));
+					$gallery_images = $product->get_gallery_image_ids();
+					if ( !is_array($gallery_images) ) {
+						$gallery_images = array();
 					}
 
-					?> 
-					<div class="">
-						<?php do_action( 'woocommerce_single_product_summary' ); ?>
+					$images = array_unique(array_merge($images, $gallery_images));
+
+					
+					if ( count( $images ) ) {
+						?> 
+						<div class="uvcw-prod-images">
+							<div class="uvcw-prod-images-wrapper">
+								<div class="uvcw-slider-wrapper">
+									<?php 
+									foreach ($images as $attachment_id) {
+										$url = wp_get_attachment_image_src( $attachment_id, 'full' );
+										if ( is_array($url) ) {
+											$url = $url[0];
+										}
+										?> 
+										<a class="uvcw-single-prod-image" target="_blank" href="<?php echo esc_url( $url ); ?>">
+											<img src="<?php echo esc_url($url); ?>" alt="">
+										</a>
+										<?php
+									}
+									?>
+								</div>
+							</div>
+						</div>
+						<?php
+					}
+					?>
+					
+					<div class="uvcw-prod-details">
+						<h1 class="uvcw-prod-title">
+							<a target="_blank" href="<?php echo esc_url( get_the_permalink( $product_id ) ); ?>">
+								<?php echo esc_html($product->get_name()); ?>
+							</a>
+						</h1>
+						<div class="uvcw-view-details">
+							<a href="<?php echo esc_url(get_the_permalink( $product_id )); ?>" target="_blank">
+								<?php echo esc_html__('VIEW DETAILS', 'update-variation-cart-woocommerce'); ?>
+							</a>
+						</div>
+						<?php 
+
+						if ( isset( $cart_item['variation'] ) ) {
+							foreach ($cart_item['variation'] as $key => $value) {
+								$_REQUEST[$key] = $value;
+							}
+						}
+
+						?> 
+						<div class="">
+							<?php do_action( 'woocommerce_single_product_summary' ); ?>
+						</div>
 					</div>
 				</div>
+				<?php echo htmlspecialchars(ob_get_clean(), ENT_NOQUOTES); ?>
 			</div>
-			<?php echo htmlspecialchars(ob_get_clean(), ENT_NOQUOTES); ?>
-		</div>
-		<?php
+			<?php
+		}
 		return $item_data;
 	}
 
