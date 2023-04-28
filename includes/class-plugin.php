@@ -162,6 +162,8 @@ class Uvcw_Plugin {
 
 			$product_id = $cart_item['product_id'];
 			global $product, $post;
+			$backup_prod = $product;
+			$backup_post = $post;
 			$post = get_post($product_id);
 			$product = wc_get_product($product_id);
 			?> 
@@ -232,6 +234,8 @@ class Uvcw_Plugin {
 				<?php echo htmlspecialchars(ob_get_clean(), ENT_NOQUOTES); ?>
 			</div>
 			<?php
+			$product = $backup_prod;
+			$post = $backup_post;
 		}
 		return $item_data;
 	}
