@@ -25,7 +25,7 @@
                 popup: 'uvcw-swal'
             },
             didOpen: function(elem){
-                $(elem).find('.variations_form').wc_variation_form();
+                $(elem).find('.variations_form').first().wc_variation_form();
 
                 $(elem).find('.woocommerce-variation-add-to-cart .single_add_to_cart_button').attr('data-key', key).text(uvcw.update);
 
