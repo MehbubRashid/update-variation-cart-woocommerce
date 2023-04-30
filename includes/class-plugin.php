@@ -136,8 +136,21 @@ class Uvcw_Plugin {
 			$item_key = sanitize_text_field( $_POST['data']['item_key'] );
 			$cart_item = $cart->get_cart_item( $item_key );
 
+			//get the current item position in cart
+			$item_position_in_cart = 0;
+			$counter = 0;
+			foreach ($cart->get_cart_contents() as $key => $itm) {
+				if ( $key == $item_key ) {
+					$item_position_in_cart = $counter;
+					break;
+				}
+
+				$counter++;
+			}
+
 			$cart->remove_cart_item($item_key);
 
+			// add to cart as new product
 			$variation_attributes = array();
 			foreach ($_POST['data'] as $key => $value) {
 				if ( strpos($key, 'attribute_') !== false ) {
@@ -149,9 +162,31 @@ class Uvcw_Plugin {
 			$quantity = sanitize_text_field($cart_item['quantity']);
 			$variation_id = sanitize_text_field( $_POST['data']['variation_id'] );
 
-			WC()->cart->add_to_cart( $prod_id, (int)$quantity, $variation_id, $variation_attributes );
+			$cart->add_to_cart( $prod_id, (int)$quantity, $variation_id, $variation_attributes );
 
-			wp_send_json( array('success' => true, 'quantity' => $quantity) );
+
+			// re order the cart to match the previous order
+			$contents = WC()->cart->get_cart_contents();
+
+			// Get the key of the last item
+			$last_key = end( array_keys( $contents ) );
+
+			// Get the value of the last item
+			$last_value = array_pop($contents);
+
+			// remove the last item
+
+			// insert at specific position
+			$new_item = array( $last_key => $last_value );
+			$final_contents = array_slice( $contents, 0, $item_position_in_cart, true ) + $new_item + array_slice( $contents, $item_position_in_cart, count( $contents ) - $item_position_in_cart, true );
+
+			WC()->cart->set_cart_contents($final_contents);
+
+			WC()->cart->maybe_set_cart_cookies();
+            WC()->cart->calculate_totals();
+
+
+			wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
 		}
 
 		wp_die();
