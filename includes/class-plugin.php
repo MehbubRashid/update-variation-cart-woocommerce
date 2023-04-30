@@ -138,7 +138,20 @@ class Uvcw_Plugin {
 
 			$cart->remove_cart_item($item_key);
 
-			wp_send_json( array('success' => true) );
+			$variation_attributes = array();
+			foreach ($_POST['data'] as $key => $value) {
+				if ( strpos($key, 'attribute_') !== false ) {
+					$variation_attributes[sanitize_text_field($key)] = sanitize_text_field($value);
+				}
+			}
+
+			$prod_id = sanitize_text_field($_POST['data']['product_id']);
+			$quantity = sanitize_text_field($cart_item['quantity']);
+			$variation_id = sanitize_text_field( $_POST['data']['variation_id'] );
+
+			WC()->cart->add_to_cart( $prod_id, (int)$quantity, $variation_id, $variation_attributes );
+
+			wp_send_json( array('success' => true, 'quantity' => $quantity) );
 		}
 
 		wp_die();

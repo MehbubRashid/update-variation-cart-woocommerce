@@ -56,8 +56,12 @@
                 action: 'uvcw_update_cart',
                 data: formDataObject
             }
+
+            console.log(formDataObject);
+
             
             $.post(uvcw.ajaxurl, data, function(response){
+                console.log(response)
                 if ( ('success' in response) && response.success ) {
                     // that means the product has been removed. now we will send another ajax to add it in cart
                     var product_url = form.attr('action');
@@ -68,39 +72,44 @@
                     var qty = $('input[name="cart['+itm_key+'][qty]"]').val();
                     data = data.replace(/quantity=[1-9]*/, 'quantity='+qty);
 
-                    $.post(product_url, data, function( result ){
-                        $( document.body ).trigger('wc_fragment_refresh');
-                        var message_wrapper = $('#ts-ajax-add-to-cart-message');
-                        var error = '';
-                        result = $('<div>' + result + '</div>');
-                        if( result.find('.woocommerce-error').length ){
-                            error = result.find('.woocommerce-error li:first').html();
-                        }
-                        form.find('.single_add_to_cart_button').removeClass('loading').addClass('added');
-                        message_wrapper.removeClass('error');
-                        if( error ){
-                            message_wrapper.addClass('error');
-                            message_wrapper.find('.error-message').html( error );
-                            form.find('.single_add_to_cart_button').removeClass('added');
-                            message_wrapper.addClass('show');
-                            
-                            setTimeout(function(){
-                                message_wrapper.removeClass('show');
-                            }, 2000);
-                        }
-                        else {
-                            // success. so close the popup
-                            Swal.close();
+                    // success. so close the popup
+                    Swal.close();
 
-                            // trigger cart update
-                            $('body').trigger('wc_update_cart');
-                        }
-                    });
+                    // trigger cart update
+                    $('body').trigger('wc_update_cart');
+
+                    // $.post(product_url, data, function( result ){
+                    //     $( document.body ).trigger('wc_fragment_refresh');
+                    //     var message_wrapper = $('#ts-ajax-add-to-cart-message');
+                    //     var error = '';
+                    //     result = $('<div>' + result + '</div>');
+                    //     if( result.find('.woocommerce-error').length ){
+                    //         error = result.find('.woocommerce-error li:first').html();
+                    //     }
+                    //     form.find('.single_add_to_cart_button').removeClass('loading').addClass('added');
+                    //     message_wrapper.removeClass('error');
+                    //     if( error ){
+                    //         message_wrapper.addClass('error');
+                    //         message_wrapper.find('.error-message').html( error );
+                    //         form.find('.single_add_to_cart_button').removeClass('added');
+                    //         message_wrapper.addClass('show');
+                            
+                    //         setTimeout(function(){
+                    //             message_wrapper.removeClass('show');
+                    //         }, 2000);
+                    //     }
+                    //     else {
+                    //         // success. so close the popup
+                    //         Swal.close();
+
+                    //         // trigger cart update
+                    //         $('body').trigger('wc_update_cart');
+                    //     }
+                    // });
                 }
             });
         }
 
-        // e.target.submit();
 
     })
 
