@@ -18,24 +18,13 @@
         window.uvcw_last_clicked_btn = $(this)[0];
         var htmlContent = $(this).closest('.woocommerce-cart-form__cart-item').find('.uvcw-popup-source').text();
         var key = $(this).closest('.woocommerce-cart-form__cart-item').find('.uvcw-item-key').val();
-        Swal.fire({
-            html: textToHTML(htmlContent),
-            allowOutsideClick: false,
-            showClass: {
-                popup: 'uvcw-swal'
-            },
-            didOpen: function(elem){
-                $(elem).find('.variations_form').first().wc_variation_form();
+        var $quickshopContent = etoiles_open_quickshop_panel(textToHTML(htmlContent), 'uvcw-swal');
 
-                $(elem).find('.woocommerce-variation-add-to-cart .single_add_to_cart_button').attr('data-key', key).text(uvcw.update);
+        $quickshopContent.find('.variations_form').first().wc_variation_form();
 
-                $(document.body).trigger('uvcw_popup_opened');
-            },
-            showConfirmButton: false,
-            showCloseButton: true,
-            scrollbarPadding: false,
-            target: '.site-content .woocommerce'
-        })
+        $quickshopContent.find('.woocommerce-variation-add-to-cart .single_add_to_cart_button').attr('data-key', key).text(uvcw.update);
+
+        $(document.body).trigger('uvcw_popup_opened');
     });
 
     $(document).on('submit', '.uvcw-product-container .variations_form', function(e){
@@ -71,7 +60,7 @@
                     data = data.replace(/quantity=[1-9]*/, 'quantity='+qty);
 
                     // success. so close the popup
-                    Swal.close();
+                    etoiles_close_quickshop_panel();
 
                     // trigger cart update
                     $('body').trigger('wc_update_cart');

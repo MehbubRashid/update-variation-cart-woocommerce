@@ -218,7 +218,7 @@ class Uvcw_Plugin {
 			<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
 			<div class="uvcw-popup-source">
 				<?php ob_start(); ?>
-				<div class="uvcw-product-container product">
+				<div class="uvcw-product-container quickshop-product-wrap product">
 					<?php 
 					$images = array(get_post_thumbnail_id( $product_id ));
 					$gallery_images = $product->get_gallery_image_ids();
@@ -231,7 +231,7 @@ class Uvcw_Plugin {
 					
 					if ( count( $images ) ) {
 						?> 
-						<div class="uvcw-prod-images">
+						<div class="uvcw-prod-images qs-product-images">
 							<div class="uvcw-prod-images-wrapper">
 								<div class="uvcw-slider-wrapper">
 									<?php 
@@ -254,7 +254,7 @@ class Uvcw_Plugin {
 					}
 					?>
 					
-					<div class="uvcw-prod-details">
+					<div class="uvcw-prod-details qs-product-details">
 						<h1 class="uvcw-prod-title">
 							<a target="_blank" href="<?php echo esc_url( get_the_permalink( $product_id ) ); ?>">
 								<?php echo esc_html($product->get_name()); ?>

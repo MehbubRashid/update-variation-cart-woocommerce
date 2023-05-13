@@ -48,7 +48,6 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 }
 
 .uvcw-product-container {
-    display: flex;
 
     .attribute {
         clear: both;
@@ -74,12 +73,6 @@ body.swal2-shown:not(.swal2-no-backdrop):not(.swal2-toast-shown) {
 
 .uvcw-update-btn {
     margin-top: 40px;
-}
-
-.uvcw-prod-details {
-    text-align: left;
-    flex: 1;
-    margin-left: 40px;
 }
 
 .uvcw-prod-title {
