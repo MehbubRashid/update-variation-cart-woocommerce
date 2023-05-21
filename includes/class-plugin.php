@@ -186,7 +186,10 @@ class Uvcw_Plugin {
             WC()->cart->calculate_totals();
 
 
-			wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
+			// wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
+
+			// send the cart html
+			wc_get_template('cart/cart.php');
 		}
 
 		wp_die();
@@ -214,11 +217,12 @@ class Uvcw_Plugin {
 			$backup_post = $post;
 			$post = get_post($product_id);
 			$product = wc_get_product($product_id);
+			global $item_order;
 			?> 
 			<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
 			<div class="uvcw-popup-source">
 				<?php ob_start(); ?>
-				<div class="uvcw-product-container quickshop-product-wrap product">
+				<div class="uvcw-product-container quickshop-product-wrap product" <?php echo isset($item_order) ? "data-item-order=$item_order" : ''; ?>>
 					<?php 
 					$images = array(get_post_thumbnail_id( $product_id ));
 					$gallery_images = $product->get_gallery_image_ids();

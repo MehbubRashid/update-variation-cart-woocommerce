@@ -35,6 +35,7 @@
             var form = $(this);
             form.find('.single_add_to_cart_button').removeClass('added').addClass('loading');
             var itm_key = $(this).find('.single_add_to_cart_button').attr('data-key');
+            var itm_order = $(this).closest('.uvcw-product-container').attr('data-item-order');
 
             var formDataObject = {item_key: itm_key};
             $(serialized).each(function(index, obj){
@@ -49,21 +50,19 @@
 
             
             $.post(uvcw.ajaxurl, data, function(response){
-                if ( ('success' in response) && response.success ) {
+                console.log(response);
+                if ( $(response).find('tr[data-item-order="'+itm_order+'"]').length ) {
                     // that means the product has been removed. now we will send another ajax to add it in cart
-                    var product_url = form.attr('action');
-                    var data = form.serialize();
-                    if( !form.hasClass('variations_form') && !form.hasClass('grouped_form') ){
-                        data += '&add-to-cart=' + form.find('[name="add-to-cart"]').val()
-                    }
-                    var qty = $('input[name="cart['+itm_key+'][qty]"]').val();
-                    data = data.replace(/quantity=[1-9]*/, 'quantity='+qty);
+                    $('tr[data-item-order="'+itm_order+'"]').html($(response).find('tr[data-item-order="'+itm_order+'"]').html());
 
                     // success. so close the popup
                     etoiles_close_quickshop_panel($uvcwQuickshopContent);
 
                     // trigger cart update
-                    $('body').trigger('wc_update_cart');
+                    // $('body').trigger('wc_update_cart');
+
+                    // this function is defined in the enzy-child theme custom.js
+                    update_cart_totals();
                 }
             });
         }
