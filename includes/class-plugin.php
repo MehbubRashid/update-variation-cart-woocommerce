@@ -186,10 +186,7 @@ class Uvcw_Plugin {
             WC()->cart->calculate_totals();
 
 
-			// wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
-
-			// send the cart html
-			wc_get_template('cart/cart.php');
+			wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
 		}
 
 		wp_die();
