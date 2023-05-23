@@ -57,9 +57,44 @@
 
             
             $.post(uvcw.ajaxurl, data, function(response){
-                if ( $(response.html).find('tr[data-item-key="'+itm_key+'"]').length ) {
-                    // that means the product has been removed. now we will send another ajax to add it in cart
-                    $('tr[data-item-key="'+itm_key+'"]').html($(response.html).find('tr[data-item-key="'+itm_key+'"]').html());
+                if ( $(response.html).find('tr[data-item-key]').length ) {
+                    // firstly, remove all items except removed items
+                    $('tr[data-item-key]:not(.item-removed)').remove();
+
+                    var $oldTbodyHtml = $('.cart-items-area .shop_table tbody').clone();
+
+                    // make the tbody entirely empty
+                    $('.cart-items-area .shop_table tbody').html('');
+
+                    // now we will re construct the items from the response.html we have,
+                    // but we will respect the position of removed items.
+                    var insertAt = 0;
+                    var i = 0;
+                    while( i < $(response.html).find('tr[data-item-key]').length ) {
+                        // if this sequence is for a removed item, append the removed item row.
+                        if ( $oldTbodyHtml.find('[data-item-order="'+insertAt+'"]').length ) {
+                            $('.cart-items-area .shop_table tbody').append($oldTbodyHtml.find('[data-item-order="'+insertAt+'"]'));
+                            insertAt++;
+                            $oldTbodyHtml.find('[data-item-order="'+insertAt+'"]').remove();
+                        }
+                        else {
+
+                            var $current = $(response.html).find('tr[data-item-key]').eq(i);
+                            $current.attr('data-item-order', insertAt);
+                            $('.cart-items-area .shop_table tbody').append($current);
+                            i++;
+                            insertAt++;
+                        }
+                    }
+
+                    // if there are more removed row items left, insert them as well.
+                    if ( $oldTbodyHtml.find('[data-item-order]').length ) {
+                        $oldTbodyHtml.find('[data-item-order]').each(function(){
+                            $(this).attr('data-item-order', insertAt);
+                            $('.cart-items-area .shop_table tbody').append($(this));
+                            insertAt++;
+                        });
+                    }
 
                     // success. so close the popup
                     etoiles_close_quickshop_panel($uvcwQuickshopContent);
@@ -69,27 +104,6 @@
 
                     // this function is defined in the enzy-child theme custom.js
                     update_cart_totals();
-                }
-                else {
-                    //maybe the cart item key has been replaced and thats why its not found
-                    if ( response.with_replace ) {
-                        // notice: last character of the cart item key is quantity. so we are deleting the last character
-                        var withReplace = response.with_replace.slice(0, -1);
-                        $('tr[data-item-key="'+itm_key+'"]').html($(response.html).find('tr[data-item-key="'+withReplace+'"]').html());
-                        $('tr[data-item-key="'+itm_key+'"]').attr('data-item-key', withReplace);
-
-                        // success. so close the popup
-                        etoiles_close_quickshop_panel($uvcwQuickshopContent);
-
-                        // this function is defined in the enzy-child theme custom.js
-                        update_cart_totals();
-                    }
-                }
-
-                // if we have something to delete, we are free to do so.
-                if ( response.to_delete ) {
-                    var toDelete = response.to_delete.slice(0, -1);
-                    $('tr[data-item-key="'+toDelete+'"]').remove();
                 }
             });
         }

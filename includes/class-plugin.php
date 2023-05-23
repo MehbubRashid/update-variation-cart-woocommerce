@@ -186,31 +186,9 @@ class Uvcw_Plugin {
 
 			// wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
 
-			// get to_replace (the current item we are editing)
-			$to_replace = sanitize_text_field( $_POST['currentItemKey'] );
-
-			// notice: last character of the cart item key is quantity.
-
-			// with_replace (something that exist now but previous didnt exist)
-			$all_contents = WC()->cart->get_cart_contents();
-			$allkeys = array();
-			$with_replace = null;
-			foreach ($all_contents as $cart_item_key => $cart_item) {
-				if ( !in_array($cart_item_key.$cart_item['quantity'], $_POST['currentItemKeys']) ) {
-					$with_replace = $cart_item_key.$cart_item['quantity'];
-					$allkeys[] = $cart_item_key.$cart_item['quantity'];
-				}
-			}
-
 			
-
-			// to_delete (something that previously existed, but now doesnt)
-			$to_delete = null;
-			foreach ($_POST['currentItemKeys'] as $key) {
-				if ( !in_array($key, $allkeys) && $key !== $to_replace.$all_contents[$to_replace]['quantity'] ) {
-					$to_delete = $key;
-				}
-			}
+			
+			$all_contents = WC()->cart->get_cart_contents();
 
 			// send the cart html
 			ob_start();
@@ -219,10 +197,7 @@ class Uvcw_Plugin {
 			wp_send_json( array(
 				'allcontents' => array_keys($all_contents), 
 				'success' => true, 
-				'html' => $html, 
-				'to_replace' => $to_replace.$all_contents[$to_replace]['quantity'], 
-				'with_replace' => $with_replace, 
-				'to_delete' => $to_delete
+				'html' => $html,
 			) );
 		}
 
