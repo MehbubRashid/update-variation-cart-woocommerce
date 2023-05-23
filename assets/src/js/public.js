@@ -58,43 +58,8 @@
             
             $.post(uvcw.ajaxurl, data, function(response){
                 if ( $(response.html).find('tr[data-item-key]').length ) {
-                    // firstly, remove all items except removed items
-                    $('tr[data-item-key]:not(.item-removed)').remove();
-
-                    var $oldTbodyHtml = $('.cart-items-area .shop_table tbody').clone();
-
-                    // make the tbody entirely empty
-                    $('.cart-items-area .shop_table tbody').html('');
-
-                    // now we will re construct the items from the response.html we have,
-                    // but we will respect the position of removed items.
-                    var insertAt = 0;
-                    var i = 0;
-                    while( i < $(response.html).find('tr[data-item-key]').length ) {
-                        // if this sequence is for a removed item, append the removed item row.
-                        if ( $oldTbodyHtml.find('[data-item-order="'+insertAt+'"]').length ) {
-                            $('.cart-items-area .shop_table tbody').append($oldTbodyHtml.find('[data-item-order="'+insertAt+'"]'));
-                            insertAt++;
-                            $oldTbodyHtml.find('[data-item-order="'+insertAt+'"]').remove();
-                        }
-                        else {
-
-                            var $current = $(response.html).find('tr[data-item-key]').eq(i);
-                            $current.attr('data-item-order', insertAt);
-                            $('.cart-items-area .shop_table tbody').append($current);
-                            i++;
-                            insertAt++;
-                        }
-                    }
-
-                    // if there are more removed row items left, insert them as well.
-                    if ( $oldTbodyHtml.find('[data-item-order]').length ) {
-                        $oldTbodyHtml.find('[data-item-order]').each(function(){
-                            $(this).attr('data-item-order', insertAt);
-                            $('.cart-items-area .shop_table tbody').append($(this));
-                            insertAt++;
-                        });
-                    }
+                    
+                    etoiles_reconstruct_cart_items(response.html);
 
                     // success. so close the popup
                     etoiles_close_quickshop_panel($uvcwQuickshopContent);
@@ -104,6 +69,8 @@
 
                     // this function is defined in the enzy-child theme custom.js
                     update_cart_totals();
+
+                    etoiles_update_mini_cart_count();
                 }
             });
         }
