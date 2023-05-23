@@ -42,29 +42,54 @@
                 formDataObject[obj.name] = obj.value;
             });
 
+            var itemKeys = [];
+            $('tr[data-item-key]:not(.item-removed)').each(function(){
+                itemKeys.push($(this).attr('data-item-key')+$(this).find('input.qty').val());
+            });
+
             var data = {
                 action: 'uvcw_update_cart',
-                data: formDataObject
+                data: formDataObject,
+                currentItemKeys: itemKeys,
+                currentItemKey: itm_key
             }
 
 
             
             $.post(uvcw.ajaxurl, data, function(response){
-                if ( ('success' in response) && response.success ) {
+                if ( $(response.html).find('tr[data-item-key="'+itm_key+'"]').length ) {
                     // that means the product has been removed. now we will send another ajax to add it in cart
-                    var product_url = form.attr('action');
-                    var data = form.serialize();
-                    if( !form.hasClass('variations_form') && !form.hasClass('grouped_form') ){
-                        data += '&add-to-cart=' + form.find('[name="add-to-cart"]').val()
-                    }
-                    var qty = $('input[name="cart['+itm_key+'][qty]"]').val();
-                    data = data.replace(/quantity=[1-9]*/, 'quantity='+qty);
+                    $('tr[data-item-key="'+itm_key+'"]').html($(response.html).find('tr[data-item-key="'+itm_key+'"]').html());
 
                     // success. so close the popup
                     etoiles_close_quickshop_panel($uvcwQuickshopContent);
 
                     // trigger cart update
-                    $('body').trigger('wc_update_cart');
+                    // $('body').trigger('wc_update_cart');
+
+                    // this function is defined in the enzy-child theme custom.js
+                    update_cart_totals();
+                }
+                else {
+                    //maybe the cart item key has been replaced and thats why its not found
+                    if ( response.with_replace ) {
+                        // notice: last character of the cart item key is quantity. so we are deleting the last character
+                        var withReplace = response.with_replace.slice(0, -1);
+                        $('tr[data-item-key="'+itm_key+'"]').html($(response.html).find('tr[data-item-key="'+withReplace+'"]').html());
+                        $('tr[data-item-key="'+itm_key+'"]').attr('data-item-key', withReplace);
+
+                        // success. so close the popup
+                        etoiles_close_quickshop_panel($uvcwQuickshopContent);
+
+                        // this function is defined in the enzy-child theme custom.js
+                        update_cart_totals();
+                    }
+                }
+
+                // if we have something to delete, we are free to do so.
+                if ( response.to_delete ) {
+                    var toDelete = response.to_delete.slice(0, -1);
+                    $('tr[data-item-key="'+toDelete+'"]').remove();
                 }
             });
         }

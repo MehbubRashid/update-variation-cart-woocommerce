@@ -123,8 +123,6 @@ class Uvcw_Plugin {
 
 		add_filter( 'woocommerce_get_item_data', array($this, 'variation_data_html'), 10, 2 );
 
-		add_action( 'woocommerce_after_template_part', array($this, 'after_wc_template'), 10, 4 );
-
 		add_action( 'wp_ajax_uvcw_update_cart', array($this, 'ajax_update_cart') );
 		add_action( 'wp_ajax_nopriv_uvcw_update_cart', array($this, 'ajax_update_cart') );
 	}
@@ -186,27 +184,54 @@ class Uvcw_Plugin {
             WC()->cart->calculate_totals();
 
 
-			wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
+			// wp_send_json( array('success' => true, 'quantity' => $quantity, 'contents' => WC()->cart->get_cart_contents()) );
+
+			// get to_replace (the current item we are editing)
+			$to_replace = sanitize_text_field( $_POST['currentItemKey'] );
+
+			// notice: last character of the cart item key is quantity.
+
+			// with_replace (something that exist now but previous didnt exist)
+			$all_contents = WC()->cart->get_cart_contents();
+			$allkeys = array();
+			$with_replace = null;
+			foreach ($all_contents as $cart_item_key => $cart_item) {
+				if ( !in_array($cart_item_key.$cart_item['quantity'], $_POST['currentItemKeys']) ) {
+					$with_replace = $cart_item_key.$cart_item['quantity'];
+					$allkeys[] = $cart_item_key.$cart_item['quantity'];
+				}
+			}
+
+			
+
+			// to_delete (something that previously existed, but now doesnt)
+			$to_delete = null;
+			foreach ($_POST['currentItemKeys'] as $key) {
+				if ( !in_array($key, $allkeys) && $key !== $to_replace.$all_contents[$to_replace]['quantity'] ) {
+					$to_delete = $key;
+				}
+			}
+
+			// send the cart html
+			ob_start();
+			wc_get_template('cart/cart.php');
+			$html = ob_get_clean();
+			wp_send_json( array(
+				'allcontents' => array_keys($all_contents), 
+				'success' => true, 
+				'html' => $html, 
+				'to_replace' => $to_replace.$all_contents[$to_replace]['quantity'], 
+				'with_replace' => $with_replace, 
+				'to_delete' => $to_delete
+			) );
 		}
 
 		wp_die();
 	}
 
-	// add edit button
-	public function after_wc_template($template_name, $template_path, $located, $args) {
-		if ( $template_name === 'cart/cart-item-data.php' && is_cart() ) {
-			?> 
-			<div class="uvcw-edit">
-				<i class="dashicons dashicons-edit"></i>
-				<?php echo esc_html__('Edit', 'update-variation-cart-woocommerce'); ?>
-			</div>
-			<?php
-		}
-	}
-
 
 	public function variation_data_html($item_data, $cart_item) {
-		if ( !is_admin(  ) && is_cart() ) {
+		if ( (!is_admin() && is_cart()) || is_ajax() ) {
 
 			$product_id = $cart_item['product_id'];
 			global $product, $post;
