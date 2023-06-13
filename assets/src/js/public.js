@@ -68,7 +68,7 @@
                     // $('body').trigger('wc_update_cart');
 
                     // this function is defined in the enzy-child theme custom.js
-                    update_cart_totals();
+                    etoiles_update_cart_totals();
 
                     etoiles_update_mini_cart_count();
                 }
