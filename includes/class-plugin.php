@@ -219,7 +219,7 @@ class Uvcw_Plugin {
 			<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
 			<div class="uvcw-popup-source">
 				<?php ob_start(); ?>
-				<div class="uvcw-product-container quickshop-product-wrap product" <?php echo isset($item_order) ? "data-item-order=$item_order" : ''; ?>>
+				<div class="uvcw-product-container quickshop-product-wrap product" <?php echo isset($item_order) ? "data-item-order=$item_order" : ''; ?> data-product_id="<?php echo esc_attr($product_id); ?>">
 					<?php 
 					$images = array(get_post_thumbnail_id( $product_id ));
 					$gallery_images = $product->get_gallery_image_ids();
@@ -257,9 +257,7 @@ class Uvcw_Plugin {
 					
 					<div class="uvcw-prod-details qs-product-details">
 						<h1 class="uvcw-prod-title">
-							<a target="_blank" href="<?php echo esc_url( get_the_permalink( $product_id ) ); ?>">
-								<?php echo esc_html($product->get_name()); ?>
-							</a>
+							<?php woocommerce_template_single_title(); ?>
 						</h1>
 						<div class="uvcw-view-details">
 							<a href="<?php echo esc_url(get_the_permalink( $product_id )); ?>" target="_blank">
