@@ -40,7 +40,7 @@ define( 'UVCW_VERSION', '1.0.0' );
 /**
  * Define plugin path and plugin url.
  */
-define( 'UVCW_PATH', plugin_dir_path( __FILE__ ) );
+define( 'UVCW_PATH', plugin_dir_path( __FILE__ ) ); 
 define( 'UVCW_URL', plugin_dir_url( __FILE__ ) );
 define( 'UVCW_ASSETS_URL', plugin_dir_url( __FILE__ ) . 'assets/' );
 define( 'UVCW_ASSETS_VERSION', time() );
