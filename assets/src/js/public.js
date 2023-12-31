@@ -24,6 +24,11 @@
 
         $uvcwQuickshopContent.find('.woocommerce-variation-add-to-cart .single_add_to_cart_button').attr('data-key', key).text(uvcw.update);
 
+        init_quickshop_image_slider($uvcwQuickshopContent);
+
+
+        $uvcwQuickshopContent.find('.thumbnails-container').removeClass('loading');
+
         $(document.body).trigger('uvcw_popup_opened');
     });
 

@@ -214,12 +214,19 @@ class Uvcw_Plugin {
 			$backup_post = $post;
 			$post = get_post($product_id);
 			$product = wc_get_product($product_id);
+			$is_mobile_slider = wp_is_mobile(  );
 			global $item_order;
+
+			if ( isset( $cart_item['variation'] ) && is_array($cart_item['variation']) ) {
+				foreach ($cart_item['variation'] as $key => $value) {
+					$_GET[$key] = $value;
+				}
+			}
 			?> 
 			<input type="hidden" name="" class="uvcw-item-key" value="<?php echo esc_attr($cart_item['key']); ?>">
 			<div class="uvcw-popup-source">
 				<?php ob_start(); ?>
-				<div class="uvcw-product-container quickshop-product-wrap product" <?php echo isset($item_order) ? "data-item-order=$item_order" : ''; ?> data-product_id="<?php echo esc_attr($product_id); ?>">
+				<div class="uvcw-product-container quickshop-product-wrap product" <?php echo isset($item_order) ? "data-item-order=$item_order" : ''; ?> data-product_id="<?php echo esc_attr($product_id); ?>" id="<?php echo esc_attr($product_id); ?>">
 					<?php 
 					$images = array(get_post_thumbnail_id( $product_id ));
 					$gallery_images = $product->get_gallery_image_ids();
@@ -232,24 +239,8 @@ class Uvcw_Plugin {
 					
 					if ( count( $images ) ) {
 						?> 
-						<div class="uvcw-prod-images qs-product-images">
-							<div class="uvcw-prod-images-wrapper">
-								<div class="uvcw-slider-wrapper">
-									<?php 
-									foreach ($images as $attachment_id) {
-										$url = wp_get_attachment_image_src( $attachment_id, 'full' );
-										if ( is_array($url) ) {
-											$url = $url[0];
-										}
-										?> 
-										<a class="uvcw-single-prod-image" target="_blank" href="<?php echo esc_url( $url ); ?>">
-											<img src="<?php echo esc_url($url); ?>" alt="">
-										</a>
-										<?php
-									}
-									?>
-								</div>
-							</div>
+						<div class="uvcw-prod-images qs-product-images <?php echo $is_mobile_slider ? 'mobile_slider' : 'noslider'; ?>	">
+						<?php wc_get_template("single-product/product-image.php"); ?>
 						</div>
 						<?php
 					}
